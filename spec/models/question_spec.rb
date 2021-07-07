@@ -17,6 +17,9 @@ RSpec.describe Question, type: :model do
 
     it { should validate_inclusion_of(:level).in_range(0..14) }
 
+    subject { FactoryBot.build(:question) }
+    it { should validate_uniqueness_of(:text) }
+
     it { should allow_value(14).for(:level) }
     it { should_not allow_value(15).for(:level) }
   end
