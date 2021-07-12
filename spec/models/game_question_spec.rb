@@ -24,6 +24,12 @@ RSpec.describe GameQuestion, type: :model do
       # именно под буквой b в тесте мы спрятали указатель на верный ответ
       expect(game_question.answer_correct?('b')).to be_truthy
     end
+
+    it 'correct .correct_answer_key' do
+      result = game_question.correct_answer_key
+      expect({game_question.a => 'a', game_question.b => 'b',
+              game_question.c => 'c', game_question.d => 'd'}.key(result)).to eq(1)
+    end
   end
 
   # help_hash у нас имеет такой формат:
