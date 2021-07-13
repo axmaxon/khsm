@@ -26,9 +26,7 @@ RSpec.describe GameQuestion, type: :model do
     end
 
     it 'correct .correct_answer_key' do
-      result = game_question.correct_answer_key
-      expect({game_question.a => 'a', game_question.b => 'b',
-              game_question.c => 'c', game_question.d => 'd'}.key(result)).to eq(1)
+      expect(game_question.correct_answer_key).to eq('b')
     end
   end
 
