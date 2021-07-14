@@ -122,8 +122,11 @@ RSpec.describe Game, type: :model do
   end
 
   describe 'Game.previous_level' do
+    before(:each) do
+      game_w_questions.current_level = 5
+    end
     it 'decrements the current level' do
-      expect(game_w_questions.previous_level).to eq(-1)
+      expect(game_w_questions.previous_level).to eq(4)
     end
   end
 end
