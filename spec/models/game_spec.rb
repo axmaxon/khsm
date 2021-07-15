@@ -36,9 +36,8 @@ RSpec.describe Game, type: :model do
       expect(game.game_questions.size).to eq(15)
       expect(game.game_questions.map(&:level)).to eq((0..14).to_a)
     end
-
-
   end
+
 
   # тесты на основную игровую логику
   describe 'game mechanics' do
@@ -127,6 +126,43 @@ RSpec.describe Game, type: :model do
     end
     it 'decrements the current level' do
       expect(game_w_questions.previous_level).to eq(4)
+    end
+  end
+
+  describe '#answer_current_question!' do
+    before { game_w_questions.current_level = 5 }
+
+    context 'when answer is correct ' do
+      it 'continues the game' do
+        expect(game_w_questions.answer_current_question!('d')).to be_truthy
+        expect(game_w_questions.current_level).to eq(6)
+        expect(game_w_questions.status).to eq(:in_progress)
+      end
+    end
+
+    context 'when answer is wrong' do
+      it 'level does not change' do
+        expect(game_w_questions.answer_current_question!('a')).to be_falsey
+        expect(game_w_questions.current_level).to eq(5)
+        expect(game_w_questions.status).to eq(:fail)
+      end
+    end
+
+    context 'when answer is last and correct' do
+      it 'finishes the game with a win' do
+        game_w_questions.current_level = 14
+        expect(game_w_questions.answer_current_question!('d')).to be_truthy
+        expect(game_w_questions.current_level).to eq(15)
+        expect(game_w_questions.status).to eq(:won)
+      end
+    end
+
+    context 'when time is over' do
+      it 'finishes the game with a lose' do
+        game_w_questions.created_at = (35).minutes.ago
+        expect(game_w_questions.answer_current_question!('d')).to be_falsey
+        expect(game_w_questions.status).to eq(:timeout)
+      end
     end
   end
 end
