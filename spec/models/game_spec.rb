@@ -60,7 +60,7 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.finished?).to be_falsey
     end
 
-    it 'Game.take_money!' do
+    it '#take_money!' do
       # Состояние игры: в процессе, получаем очередной(текущий) вопрос
       next_question = game_w_questions.current_game_question
 
@@ -85,7 +85,7 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  describe 'Game.status' do
+  describe '#status' do
 
     # перед каждым тестом "завершаем игру"
     before(:each) do
@@ -114,13 +114,13 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  describe 'Game.current_game_question' do
+  describe '#current_game_question' do
     it 'returns the current GameQuestion instance' do
       expect(game_w_questions.current_game_question).to eq(GameQuestion.first)
     end
   end
 
-  describe 'Game.previous_level' do
+  describe '#previous_level' do
     before(:each) do
       game_w_questions.current_level = 5
     end
