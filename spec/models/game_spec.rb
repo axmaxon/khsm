@@ -38,7 +38,6 @@ RSpec.describe Game, type: :model do
     end
   end
 
-
   # тесты на основную игровую логику
   describe 'game mechanics' do
     # правильный ответ должен продолжать игру
@@ -116,15 +115,14 @@ RSpec.describe Game, type: :model do
 
   describe '#current_game_question' do
     it 'returns the current GameQuestion instance' do
-      expect(game_w_questions.current_game_question).to eq(GameQuestion.first)
+      game_w_questions.current_level = 5
+      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions[5])
     end
   end
 
   describe '#previous_level' do
-    before(:each) do
-      game_w_questions.current_level = 5
-    end
     it 'decrements the current level' do
+      game_w_questions.current_level = 5
       expect(game_w_questions.previous_level).to eq(4)
     end
   end
