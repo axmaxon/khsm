@@ -132,34 +132,39 @@ RSpec.describe Game, type: :model do
 
     context 'when answer is correct ' do
       it 'continues the game' do
-        expect(game_w_questions.answer_current_question!('d')).to be_truthy
+        expect(game_w_questions.answer_current_question!('d')).to eql(true)
         expect(game_w_questions.current_level).to eq(6)
         expect(game_w_questions.status).to eq(:in_progress)
+        expect(game_w_questions.finished?).to eql(false)
       end
     end
 
     context 'when answer is wrong' do
       it 'level does not change' do
-        expect(game_w_questions.answer_current_question!('a')).to be_falsey
+        expect(game_w_questions.answer_current_question!('a')).to eql(false)
         expect(game_w_questions.current_level).to eq(5)
         expect(game_w_questions.status).to eq(:fail)
+        expect(game_w_questions.finished?).to eql(true)
       end
     end
 
     context 'when answer is last and correct' do
       it 'finishes the game with a win' do
         game_w_questions.current_level = 14
-        expect(game_w_questions.answer_current_question!('d')).to be_truthy
+        expect(game_w_questions.answer_current_question!('d')).to eql(true)
         expect(game_w_questions.current_level).to eq(15)
         expect(game_w_questions.status).to eq(:won)
+        expect(game_w_questions.finished?).to eql(true)
+        expect(game_w_questions.prize).to eq(1000000)
       end
     end
 
     context 'when time is over' do
       it 'finishes the game with a lose' do
         game_w_questions.created_at = (35).minutes.ago
-        expect(game_w_questions.answer_current_question!('d')).to be_falsey
+        expect(game_w_questions.answer_current_question!('d')).to eql(false)
         expect(game_w_questions.status).to eq(:timeout)
+        expect(game_w_questions.finished?).to eql(true)
       end
     end
   end
