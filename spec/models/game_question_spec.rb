@@ -67,6 +67,30 @@ RSpec.describe GameQuestion, type: :model do
       ah = game_question.help_hash[:audience_help]
       expect(ah.keys).to contain_exactly('a', 'b', 'c', 'd')
     end
+
+    it 'correct fifty_fifty' do
+      expect(game_question.help_hash).not_to include(:fifty_fifty)
+
+      game_question.add_fifty_fifty
+
+      expect(game_question.help_hash).to include(:fifty_fifty)
+
+      ff =game_question.help_hash[:fifty_fifty]
+      expect(ff.size). to eq(2)
+      expect(ff).to include('b')
+    end
+
+    it 'correct friend_call' do
+      expect(game_question.help_hash).not_to include(:friend_call)
+
+      game_question.add_friend_call
+
+      expect(game_question.help_hash).to include(:friend_call)
+
+      fc = game_question.help_hash[:friend_call]
+
+      expect(fc.split.last.downcase).to satisfy { |friend_tip| %w(a b c d).include?(friend_tip) }
+    end
   end
 
   describe 'delegates' do
