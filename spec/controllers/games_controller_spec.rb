@@ -171,7 +171,7 @@ RSpec.describe GamesController, type: :controller do
       expect(game_w_questions.current_game_question.help_hash[:audience_help]).not_to be
       expect(game_w_questions.audience_help_used).to be_falsey
 
-      # фигачим запрос в контроллен с нужным типом
+      # фигачим запрос в контроллер с нужным типом
       put :help, id: game_w_questions.id, help_type: :audience_help
       game = assigns(:game)
 
@@ -180,6 +180,24 @@ RSpec.describe GamesController, type: :controller do
       expect(game.audience_help_used).to be_truthy
       expect(game.current_game_question.help_hash[:audience_help]).to be
       expect(game.current_game_question.help_hash[:audience_help].keys).to contain_exactly('a', 'b', 'c', 'd')
+      expect(response).to redirect_to(game_path(game))
+    end
+
+    # тест на отработку "звонка другу"
+    it 'uses friend call' do
+      expect(game_w_questions.current_game_question.help_hash[:friend_call]).not_to be
+      expect(game_w_questions.audience_help_used).to be_falsey
+
+      put :help, id: game_w_questions.id, help_type: :friend_call
+
+      game = assigns(:game)
+
+      expect(game.finished?).to eql(false )
+      expect(game.friend_call_used).to eql(true )
+      expect(game.current_game_question.help_hash[:friend_call]).to be
+
+      fc = game.current_game_question.help_hash[:friend_call]
+      expect(fc.split.last.downcase).to satisfy { |friend_tip| %w(a b c d).include?(friend_tip) }
       expect(response).to redirect_to(game_path(game))
     end
   end
