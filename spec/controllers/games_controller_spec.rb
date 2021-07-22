@@ -192,12 +192,12 @@ RSpec.describe GamesController, type: :controller do
 
       game = assigns(:game)
 
-      expect(game.finished?).to eql(false )
-      expect(game.friend_call_used).to eql(true )
+      expect(game.finished?).to eql(false)
+      expect(game.friend_call_used).to eql(true)
       expect(game.current_game_question.help_hash[:friend_call]).to be
 
-      fc = game.current_game_question.help_hash[:friend_call]
-      expect(fc.split.last.downcase).to satisfy { |friend_tip| %w(a b c d).include?(friend_tip) }
+      friend_call = game.current_game_question.help_hash[:friend_call]
+      expect(friend_call.split[-1]).to satisfy { |friend_tip| %w[A B C D].include?(friend_tip) }
       expect(response).to redirect_to(game_path(game))
     end
   end
