@@ -48,7 +48,7 @@ RSpec.feature "user views anothers game", type: :feature do
 
     # Даты создания игр (локализованные)
     expect(page).to have_content '01 мая, 08:07'
-    expect(page).to have_content '06 июля, 08:07'
+    expect(page).to have_content '01 июня, 08:07'
     expect(page).to have_content '06 июля, 08:07'
 
     # Номера последних вопросов
