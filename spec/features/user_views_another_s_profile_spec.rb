@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'USER creates a game', type: :feature do
+RSpec.feature "user views anothers game", type: :feature do
   let(:user) { FactoryBot.create :user, id: 1, name: 'Johnny'  }
   let!(:another_user) {FactoryBot.create :user, id: 2, name: 'Olaf' }
 
