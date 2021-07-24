@@ -2,26 +2,31 @@ require 'rails_helper'
 
 # Тест на шаблон users/show.html.erb
 RSpec.describe 'users/show', type: :view do
-  let(:profile_owner) { assign(:user, FactoryBot.build_stubbed(:user, name: 'Johnny')) }
+  let(:user) { assign(:user, FactoryBot.create(:user, name: 'Johnny')) }
+  let(:another_user) { assign(:user, FactoryBot.create(:user, name: 'Olaf')) }
   let(:profile_games) { assign(:games, [FactoryBot.build_stubbed(:game)]) }
+
+  before do
+    sign_in user
+    stub_template "users/_game.html.erb" => "User games show here"
+  end
 
   context 'when user is unauthorized' do
     before do
-      profile_owner
+      another_user
       render
     end
 
-    it 'does not render a link to change the password' do
+    it 'does not render any links with text about to change the password' do
       expect(rendered).not_to match 'Сменить имя и пароль'
     end
 
     it 'renders user name' do
-      expect(rendered).to match 'Johnny'
+      expect(rendered).to match 'Olaf'
     end
 
     it 'renders user games' do
       profile_games
-      stub_template "users/_game.html.erb" => "User games show here"
       render
 
       expect(rendered).to match 'User games show here'
@@ -29,13 +34,19 @@ RSpec.describe 'users/show', type: :view do
   end
 
   context 'when user is authorized' do
-    # current_user соответствует владельцу страницы (пользователь авторизован)
-    before { allow(view).to receive(:current_user).and_return(profile_owner) }
-
-    it 'renders a link to change the password' do
+    before do
+      user
       render
+    end
 
-      expect(rendered).to match 'Сменить имя и пароль'
+    # Более специфичные ожидания, чем в контексте неавторизованного пользователя, т.к
+    # проверяется наличие ссылки конкретно для владельца профиля
+    it 'renders a link to change the password' do
+      expect(rendered).to have_link('Сменить имя и пароль', href: edit_user_registration_path(user))
+    end
+
+    it 'renders user name' do
+      expect(rendered).to match 'Johnny'
     end
   end
 end
